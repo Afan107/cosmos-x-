@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default-deny all undefined paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // User Profile: Only the authenticated user can read & write their profile
+    match /users/{userId} {
+      allow get: if isOwner(userId) && isValidId(userId);
+      allow create, update: if isOwner(userId) && isValidId(userId)
+        && request.resource.data.callsign is string
+        && request.resource.data.callsign.size() <= 32;
+    }
+
+    // Stella Chats: Users can read and write their own dialogues with the 7 Stella-Cores
+    match /stella_chats/{messageId} {
+      allow get: if isSignedIn() && isValidId(messageId) && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidId(messageId)
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.stellaId is string
+        && request.resource.data.content is string
+        && request.resource.data.content.size() <= 5000;
+    }
+
+    // Minted Discoveries: Public readable ledger, writable by authenticated commanders
+    match /minted_discoveries/{discoveryId} {
+      allow read: if true;
+      allow create: if isSignedIn() && isValidId(discoveryId)
+        && request.resource.data.targetId is string
+        && request.resource.data.sha256Seal is string;
+    }
+  }
+}

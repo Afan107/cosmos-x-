@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>COSMOS-X: Deep Space Telemetry &amp; Anomaly Scanner</title>
+    <meta name="description" content="Next-generation deep space telemetry, exoplanet transit hunter with Box Least Squares (BLS) modeling, 3D holographic star map, autonomous discovery bots, and AI Astrobiologist agent." />
+    <meta property="og:title" content="COSMOS-X: Deep Space Telemetry &amp; Anomaly Scanner" />
+    <meta property="og:description" content="Next-generation deep space telemetry, exoplanet transit hunter with Box Least Squares (BLS) modeling, 3D holographic star map, autonomous discovery bots, and AI Astrobiologist agent." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script>
+      // Gracefully suppress Vite HMR WebSocket connection drops in sandboxed iframe / Cloud Run proxies
+      (function() {
+        function isWsError(msg) {
+          if (!msg) return false;
+          var str = String(msg).toLowerCase();
+          return str.includes('websocket') || str.includes('failed to connect to websocket');
+        }
+        window.addEventListener('unhandledrejection', function(event) {
+          var reason = event.reason;
+          var msg = (reason && (reason.message || reason.stack || reason)) || '';
+          if (isWsError(msg)) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+          }
+        }, true);
+        window.addEventListener('error', function(event) {
+          var msg = (event.message || '') + ' ' + (event.filename || '');
+          if (isWsError(msg)) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+          }
+        }, true);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

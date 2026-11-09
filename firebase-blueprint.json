@@ -1,0 +1,118 @@
+{
+  "entities": {
+    "userProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated cosmic explorer commander profile and telemetry stats",
+      "type": "object",
+      "properties": {
+        "callsign": {
+          "type": "string",
+          "maxLength": 32,
+          "description": "Commander callsign handle"
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "Verified email of commander"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Server timestamp of last update"
+        }
+      },
+      "required": ["callsign"]
+    },
+    "chatMessage": {
+      "title": "ChatMessage",
+      "description": "Message exchange with one of the 7 Stella-Core Vegapunk minds",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "UID of the user sending the prompt"
+        },
+        "stellaId": {
+          "type": "string",
+          "maxLength": 32,
+          "description": "STELLA_01 to STELLA_07 ID"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["user", "assistant", "pythagoras_filter"],
+          "description": "Role of the speaker in dialogue"
+        },
+        "content": {
+          "type": "string",
+          "maxLength": 5000,
+          "description": "Message text or theoretical response"
+        },
+        "eli10Summary": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Plain-English ELI10 translation distilled by Pythagoras"
+        },
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "Target star or anomaly under discussion"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "ISO timestamp or server timestamp"
+        }
+      },
+      "required": ["userId", "stellaId", "role", "content", "timestamp"]
+    },
+    "discoveryPreprint": {
+      "title": "DiscoveryPreprint",
+      "description": "Minted discovery dossier certified with SHA-256 seal",
+      "type": "object",
+      "properties": {
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "Target ID"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 256,
+          "description": "Breakthrough title"
+        },
+        "sigma": {
+          "type": "number",
+          "description": "Calculated sigma significance"
+        },
+        "sha256Seal": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "SHA-256 cryptographic proof"
+        },
+        "authorCallsign": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "Commander callsign"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of mint"
+        }
+      },
+      "required": ["targetId", "title", "sigma", "sha256Seal", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "userProfile",
+      "description": "Commander profile settings and callsign preferences"
+    },
+    "/stella_chats/{messageId}": {
+      "schema": "chatMessage",
+      "description": "Interactive dialogues with the 7 Stella-Core Vegapunk minds"
+    },
+    "/minted_discoveries/{discoveryId}": {
+      "schema": "discoveryPreprint",
+      "description": "Public ledger of SHA-256 verified discoveries"
+    }
+  }
+}
